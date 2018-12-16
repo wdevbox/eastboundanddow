@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         gv.getViewport().setXAxisBoundsManual(true);
         //gv.getGridLabelRenderer().setHumanRounding(false);
         }
-        
+
         DataPoint[] fillDPArray(ArrayList<Double> prices, ArrayList<String> dates) throws ParseException {
         DataPoint[] dp = new DataPoint[prices.size()];
         ArrayList<Long> d2 = new ArrayList<>();
