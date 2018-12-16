@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        DataPoint[] dp = generateArray(10);
         //fillGraph(dp);
         final String url = "https://api.iextrading.com/1.0/stock/DIA/batch?types=chart&range=1m&last=1";
                 //buildURL("DIA", "m");
@@ -195,38 +194,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < prices.size(); i++){
             dp[i] = new DataPoint(d2.get(i),prices.get(i));
         }
-        return dp;
-        }
-
-        DataPoint[] generateArray(int size){
-            ArrayList<Double> timelist = new ArrayList<>();
-            ArrayList<Double> pricelist = new ArrayList<>();
-            DataPoint[] dp = new DataPoint[size]; int i = 0;
-            timelist.add(1000d);
-            timelist.add(1200d);
-            timelist.add(1301d);
-            timelist.add(1401d);
-            timelist.add(1501d);
-            timelist.add(1601d);
-            timelist.add(1701d);
-            timelist.add(1801d);
-            timelist.add(1901d);
-            timelist.add(2001d);
-            pricelist.add(152.2d);
-            pricelist.add(155.3d);
-            pricelist.add(122.1d);
-            pricelist.add(134.2d);
-            pricelist.add(152.2d);
-            pricelist.add(155.3d);
-            pricelist.add(122.1d);
-            pricelist.add(134.2d);
-            pricelist.add(152.2d);
-            pricelist.add(155.3d);
-            while(!pricelist.isEmpty() && !timelist.isEmpty()){
-                dp[i] = new DataPoint((double)timelist.get(0),(double)pricelist.get(0));
-                timelist.remove(0); pricelist.remove(0);
-                i++;
-            }
         return dp;
         }
 
