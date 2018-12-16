@@ -20,13 +20,33 @@
         android:layout_width="match_parent"
         android:layout_height="200dip"
         android:id="@+id/main_graph" />
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/text_out"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    </ScrollView>
-
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:text="AMD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="runAMD"
+            android:layout_weight="1"/>
+        <Button
+            android:text="NASDAQ"
+            android:onClick="runNASDAQ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <Button
+            android:text="DAX"
+            android:onClick="runDAX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <Button
+            android:text="DOW"
+            android:onClick="runDow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>

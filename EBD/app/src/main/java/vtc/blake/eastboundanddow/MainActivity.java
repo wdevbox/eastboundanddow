@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -15,6 +16,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,61 +36,13 @@ public class MainActivity extends AppCompatActivity {
     String data;
     OkHttpClient client = new OkHttpClient();
     Context context;
+    String title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        //fillGraph(dp);
-        final String url = "https://api.iextrading.com/1.0/stock/DIA/batch?types=chart&range=1m&last=1";
-                //buildURL("DIA", "m");
-
-            new Thread(){
-                @Override
-                public void run(){
-                    try{
-                        //data = getData(url);
-                        URL url = new URL("https://api.iextrading.com/1.0/stock/DIA/batch?types=chart&range=1m&last=1");
-                        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-                        try{
-                            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                            data = readStream(in);
-                        }
-                        finally{
-                            urlConnection.disconnect();
-                        }
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                }.start();
-            new Thread(){
-                @Override
-                public void run(){
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    data = sanitizeData(data);
-                    runOnUiThread(new Runnable(){
-                        @Override
-                        public void run(){
-
-                            ((TextView) findViewById(R.id.text_out)).setText(data);
-                            try {
-                                fillGraph(
-                                        fillDPArray(parsePrices(data),parseDates(data))
-                                );
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            }.start();
     }
 
     private String sanitizeData(String data) {
@@ -155,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     public void fillGraph(DataPoint[] dpArray){
 
         GraphView gv = (GraphView) findViewById(R.id.main_graph);
-
+        gv.removeAllSeries();
         //dummy values
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
         for(int j = 0; j < dpArray.length; j++)if(dpArray[j]!=null)series.appendData(dpArray[j],true,1000,true);
@@ -168,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         gv.getViewport().setScalable(true);
-        gv.setTitle("DIA Stock");
+        gv.setTitle(title);
 
         //gv.getViewport().setMaxX(dpArray[dpArray.length-1].getX());
         //gv.getViewport().setMinX(dpArray[0].getX());
@@ -198,4 +152,89 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    public void runDow(View view) {
+        title = "DOW Stock";
+        try {
+            URL url = new URL("https://api.iextrading.com/1.0/stock/DIA/batch?types=chart&range=1m&last=1");
+            fetchData(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void runAMD(View view) {
+        title = "AMD Stock";
+        try {
+            final URL url = new URL("https://api.iextrading.com/1.0/stock/AMD/batch?types=chart&range=1m&last=1");
+            fetchData(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void fetchData(final URL url){
+        new Thread(){
+            @Override
+            public void run(){
+                try{
+                    //data = getData(url);
+                    HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                    try{
+                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                        data = readStream(in);
+                    }
+                    finally{
+                        urlConnection.disconnect();
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+        new Thread(){
+            @Override
+            public void run(){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                data = sanitizeData(data);
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run(){
+                        try {
+                            fillGraph(
+                                    fillDPArray(parsePrices(data),parseDates(data))
+                            );
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }.start();
+
+    }
+
+
+    public void runNASDAQ(View view) {
+        title = "NASDAQ Stock";
+        try {
+            final URL url = new URL("https://api.iextrading.com/1.0/stock/NDAQ/batch?types=chart&range=1m&last=1");
+            fetchData(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void runDAX(View view) {
+        title = "DAX Stock";
+        try {
+            final URL url = new URL("https://api.iextrading.com/1.0/stock/DAX/batch?types=chart&range=1m&last=1");
+            fetchData(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 }
