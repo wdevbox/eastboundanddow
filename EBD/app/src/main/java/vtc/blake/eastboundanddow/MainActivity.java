@@ -34,7 +34,6 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     String data;
-    OkHttpClient client = new OkHttpClient();
     Context context;
     String title;
     @Override
@@ -99,13 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return dates;
     }
-    public String getData(String url) throws IOException{
 
-        Request request = new Request.Builder().url(url).build();
-        Response response = client.newCall(request).execute();
-        Log.d("Http response code:", Integer.toString(response.code()));
-        return response.toString();
-    }
     public void fillGraph(DataPoint[] dpArray){
 
         GraphView gv = (GraphView) findViewById(R.id.main_graph);
@@ -130,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
         gv.getViewport().setXAxisBoundsManual(true);
         //gv.getGridLabelRenderer().setHumanRounding(false);
         }
-
-
-
+        
         DataPoint[] fillDPArray(ArrayList<Double> prices, ArrayList<String> dates) throws ParseException {
         DataPoint[] dp = new DataPoint[prices.size()];
         ArrayList<Long> d2 = new ArrayList<>();
